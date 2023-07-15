@@ -10,3 +10,6 @@ async-std = {version = "1.12.0", features = ["attributes"]}
 futures = "0.3.28"
 libp2p = { version = "0.52.1", features = ["async-std","mdns","noise","ping","tcp","gossipsub","yamux"] }
 libp2p-swarm-derive = "0.33.0"
+reqwest = "0.11.18"
+serde = { version = "1.0.171", features = ["derive"]}
+serde_json = "1.0.103"

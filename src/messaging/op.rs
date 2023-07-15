@@ -3,3 +3,4 @@ enum Op {
     Response, // This is a peer responding to another peer with historical information
     Record // this is a peer doing speed tests at interval X and keeping them for record purposes.
 }
+

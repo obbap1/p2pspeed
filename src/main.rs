@@ -1,4 +1,5 @@
 mod messaging; 
+mod services;
 
 use futures::prelude::*;
 use libp2p::core::upgrade::Version;
@@ -76,7 +77,23 @@ async fn main() -> Result<(), Box<dyn Error>> {
     loop {
         match swarm.select_next_some().await {
             SwarmEvent::NewListenAddr { listener_id, address } => println!("Listener ID {listener_id:?} and Address {address}"),
-            SwarmEvent::Behaviour(event) => println!("event -> {event:?}"),
+            SwarmEvent::Behaviour(MyBehaviourEvent::Mdns(mdns::Event::Discovered(list))) => {
+                 for (peer_id, multiaddr) in list {
+                    println!("Discovered peer with ID: {peer_id} and address {multiaddr}");
+                    swarm.behaviour_mut().gossipsub.add_explicit_peer(&peer_id)
+                 }
+            },
+            SwarmEvent::Behaviour(MyBehaviourEvent::Mdns(mdns::Event::Expired(list))) => {
+                for(peer_id, multiaddr) in list {
+                    println!("Expired peer with ID: {peer_id} and address {multiaddr}");
+                    swarm.behaviour_mut().gossipsub.remove_explicit_peer(&peer_id)
+                }
+
+            },
+            SwarmEvent::Behaviour(MyBehaviourEvent::Gossipsub(gossipsub::Event::Message { propagation_source, message_id, message })) => {
+                println!("Got message '{}' from {propagation_source} and ID: {message_id}",
+                String::from_utf8(message.data).expect("utf8 string"))
+            },
             _ => {},
         }
     }
