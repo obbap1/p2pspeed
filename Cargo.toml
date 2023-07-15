@@ -1,0 +1,12 @@
+[package]
+name = "p2pspeed"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+async-std = {version = "1.12.0", features = ["attributes"]}
+futures = "0.3.28"
+libp2p = { version = "0.52.1", features = ["async-std","mdns","noise","ping","tcp","gossipsub","yamux"] }
+libp2p-swarm-derive = "0.33.0"
